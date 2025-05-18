@@ -64,12 +64,12 @@ class OpenAIClient(BaseClient):
 class GoogleGenAIClient(BaseClient):
     """
     config keys:
-        - api_type="gemeni"
+        - api_type="gemini"
         - api_key (required)
         - model (optional): defaults to "gemini-1.5-pro-latest"
     """
 
-    api_type = "gemeni"
+    api_type = "gemini"
     default_model = os.getenv("GOOGLE_GENAI_DEFAULT_MODEL", "gemini-1.5-pro-latest")
 
     def __init__(self, config: dict):
