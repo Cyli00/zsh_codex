@@ -2,9 +2,9 @@
 
 # This ZSH plugin reads the text from the current buffer
 # and uses a Python script to complete the text.
-api="openai"
-
 _ZSH_CODEX_REPO=$(dirname $0)
+
+export CODEX_SERVICE_TYPE="openai"
 
 create_completion() {
     # Get the text typed until now.
@@ -27,4 +27,4 @@ create_completion() {
 # Bind the create_completion function to a key.
 zle -N create_completion
 # You may want to add a key binding here, e.g.:
-# bindkey '^X^E' create_completion
+bindkey '^X' create_completion

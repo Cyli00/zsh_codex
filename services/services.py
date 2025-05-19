@@ -20,7 +20,7 @@ class OpenAIClient(BaseClient):
         - OPENAI_BASE_URL (optional): defaults to "https://api.openai.com/v1".
         - OPENAI_ORGANIZATION (optional): defaults to None
         - OPENAI_MODEL (optional): defaults to "gpt-4o-mini"
-        - OPENAI_TEMPERATURE (optional): defaults to 1.0.
+        - OPENAI_TEMPERATURE (optional): defaults to 0.
     """
 
     api_type = "openai"
@@ -40,7 +40,7 @@ class OpenAIClient(BaseClient):
             sys.exit(1)
 
         self.model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-        self.temperature = float(os.getenv("OPENAI_TEMPERATURE", "1.0"))
+        self.temperature = float(os.getenv("OPENAI_TEMPERATURE", "0"))
         
         self.client = OpenAI(
             api_key=api_key,
@@ -64,7 +64,7 @@ class GoogleGenAIClient(BaseClient):
     """
     Reads configuration from environment variables:
         - GEMINI_API_KEY (required)
-        - GEMINI_MODEL (optional): defaults to "gemini-1.5-pro-latest"
+        - GEMINI_MODEL (optional): defaults to "gemma-3-27b-it"
     """
 
     api_type = "gemini"
@@ -84,7 +84,7 @@ class GoogleGenAIClient(BaseClient):
             sys.exit(1)
             
         genai.configure(api_key=api_key)
-        self.model_name = os.getenv("GEMINI_MODEL", "gemini-1.5-pro-latest")
+        self.model_name = os.getenv("GEMINI_MODEL", "gemma-3-27b-it")
         self.generative_model = genai.GenerativeModel(self.model_name)
 
     def get_completion(self, full_command: str) -> str:
@@ -99,7 +99,7 @@ class GroqClient(BaseClient):
     Reads configuration from environment variables:
         - GROQ_API_KEY (required)
         - GROQ_MODEL (optional): defaults to "llama-3.2-11b-text-preview"
-        - GROQ_TEMPERATURE (optional): defaults to 1.0.
+        - GROQ_TEMPERATURE (optional): defaults to 0.
     """
     
     api_type = "groq"
@@ -119,7 +119,7 @@ class GroqClient(BaseClient):
             sys.exit(1)
             
         self.model = os.getenv("GROQ_MODEL", "llama-3.2-11b-text-preview")
-        self.temperature = float(os.getenv("GROQ_TEMPERATURE", "1.0"))
+        self.temperature = float(os.getenv("GROQ_TEMPERATURE", "0"))
         
         self.client = Groq(api_key=api_key)
     
@@ -140,7 +140,7 @@ class MistralClient(BaseClient):
     Reads configuration from environment variables:
         - MISTRAL_API_KEY (required)
         - MISTRAL_MODEL (optional): defaults to "codestral-latest"
-        - MISTRAL_TEMPERATURE (optional): defaults to 1.0.
+        - MISTRAL_TEMPERATURE (optional): defaults to 0.
     """
     
     api_type = "mistral"
@@ -160,7 +160,7 @@ class MistralClient(BaseClient):
             sys.exit(1)
 
         self.model = os.getenv("MISTRAL_MODEL", "codestral-latest")
-        self.temperature = float(os.getenv("MISTRAL_TEMPERATURE", "1.0"))
+        self.temperature = float(os.getenv("MISTRAL_TEMPERATURE", "0"))
         
         self.client = Mistral(api_key=api_key)
         
@@ -183,7 +183,7 @@ class AmazonBedrock(BaseClient):
         - BEDROCK_AWS_SECRET_ACCESS_KEY (optional): defaults to environment variable AWS_SECRET_ACCESS_KEY
         - BEDROCK_AWS_SESSION_TOKEN (optional): defaults to environment variable AWS_SESSION_TOKEN
         - BEDROCK_MODEL (optional): defaults to "anthropic.claude-3-5-sonnet-20240620-v1:0"
-        - BEDROCK_TEMPERATURE (optional): defaults to 1.0.
+        - BEDROCK_TEMPERATURE (optional): defaults to 0.
     """
 
     api_type = "bedrock"
@@ -198,7 +198,7 @@ class AmazonBedrock(BaseClient):
             sys.exit(1)
 
         self.model = os.getenv("BEDROCK_MODEL", "anthropic.claude-3-5-sonnet-20240620-v1:0")
-        self.temperature = float(os.getenv("BEDROCK_TEMPERATURE", "1.0"))
+        self.temperature = float(os.getenv("BEDROCK_TEMPERATURE", "0"))
 
         session_kwargs = {}
         aws_region = os.getenv("BEDROCK_AWS_REGION")
