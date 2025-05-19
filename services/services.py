@@ -18,7 +18,6 @@ class OpenAIClient(BaseClient):
     Reads configuration from environment variables:
         - OPENAI_API_KEY (required)
         - OPENAI_BASE_URL (optional): defaults to "https://api.openai.com/v1".
-        - OPENAI_ORGANIZATION (optional): defaults to None
         - OPENAI_MODEL (optional): defaults to "gpt-4o-mini"
         - OPENAI_TEMPERATURE (optional): defaults to 0.
     """
@@ -44,8 +43,7 @@ class OpenAIClient(BaseClient):
         
         self.client = OpenAI(
             api_key=api_key,
-            base_url=os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1"),
-            organization=os.getenv("OPENAI_ORGANIZATION"),
+            base_url=os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
         )
 
     def get_completion(self, full_command: str) -> str:
