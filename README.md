@@ -1,47 +1,6 @@
-<h1 align="center">⌨️ 🦾 Zsh Codex</h1>
-
-<p align="center">
-    AI in the command line.
-</p>
-
-<p align="center">
-    <a href="https://github.com/tom-doerr/zsh_codex/stargazers"
-        ><img
-            src="https://img.shields.io/github/stars/tom-doerr/zsh_codex?colorA=2c2837&colorB=c9cbff&style=for-the-badge&logo=starship style=flat-square"
-            alt="Repository's starts"
-    /></a>
-    <a href="https://github.com/tom-doerr/zsh_codex/issues"
-        ><img
-            src="https://img.shields.io/github/issues-raw/tom-doerr/zsh_codex?colorA=2c2837&colorB=f2cdcd&style=for-the-badge&logo=starship style=flat-square"
-            alt="Issues"
-    /></a>
-    <a href="https://github.com/tom-doerr/zsh_codex/blob/main/LICENSE"
-        ><img
-            src="https://img.shields.io/github/license/tom-doerr/zsh_codex?colorA=2c2837&colorB=b5e8e0&style=for-the-badge&logo=starship style=flat-square"
-            alt="License"
-    /><br />
-    <a href="https://github.com/tom-doerr/zsh_codex/commits/main"
-		><img
-			src="https://img.shields.io/github/last-commit/tom-doerr/zsh_codex/main?colorA=2c2837&colorB=ddb6f2&style=for-the-badge&logo=starship style=flat-square"
-			alt="Latest commit"
-    /></a>
-    <a href="https://github.com/tom-doerr/zsh_codex"
-        ><img
-            src="https://img.shields.io/github/repo-size/tom-doerr/zsh_codex?colorA=2c2837&colorB=89DCEB&style=for-the-badge&logo=starship style=flat-square"
-            alt="GitHub repository size"
-    /></a>
-</p>
-
-<p align="center">
-    <img src='https://github.com/tom-doerr/bins/raw/main/zsh_codex/zc4.gif'>
-    <p align="center">
-        You just need to write a comment or variable name and the AI will write the corresponding code.
-    </p>
-</p>
-
 ## What is it?
 
-This is a ZSH plugin that enables you to use AI powered code completion in the command line. It now supports both OpenAI's Codex and Google's Generative AI (Gemini). OpenAI Codex is the AI that also powers GitHub Copilot, while Gemini is Google's advanced language model.
+This is a ZSH plugin that enables you to use AI powered code completion in the command line.
 
 ## How do I install it?
 
@@ -68,112 +27,84 @@ pip3 install boto3
 2. Download the ZSH plugin.
 
 ```bash
-git clone https://github.com/tom-doerr/zsh_codex.git ~/.oh-my-zsh/custom/plugins/zsh_codex 
+# mkdir ~/.zsh
+cd ~/.zsh
+git clone https://github.com/tom-doerr/zsh_codex.git
 ```
 
 3. Add the following to your `.zshrc` file.
 
-Using oh-my-zsh:
+```bash
+    source "~/.zsh/zsh_codex/zsh_codex.plugin.zsh"
+```
+
+4. Configure the plugin by setting environment variables in your `.zshrc` file or '~/.zsh/zsh_codex/zsh_codex.plugin.zsh'.
+   You need to set `CODEX_SERVICE_TYPE` to specify which AI provider to use. Then, set the required environment variables for that provider.
+
+   **Common Environment Variables:**
+    - `CODEX_SERVICE_TYPE`: Specifies the AI service to use (e.g., "openai", "gemini", "groq", "mistral", "bedrock").
+
+   **Provider-Specific Environment Variables:**
+
+   **OpenAI:**
+   ```bash
+   export CODEX_SERVICE_TYPE="openai"
+   export OPENAI_API_KEY="your_openai_api_key"
+   # Optional:
+   # export OPENAI_MODEL="gpt-4o-mini"
+   # export OPENAI_BASE_URL="https://api.openai.com/v1" # For self-hosted or proxy
+   # export OPENAI_TEMPERATURE="0"
+   ```
+
+   **Google Gemini:**
+   ```bash
+   export CODEX_SERVICE_TYPE="gemini"
+   export GEMINI_API_KEY="your_gemini_api_key"
+   # Optional:
+   # export GEMINI_MODEL="gemma-3-27b-it"
+   ```
+
+   **Groq:**
+   ```bash
+   export CODEX_SERVICE_TYPE="groq"
+   export GROQ_API_KEY="your_groq_api_key"
+   # Optional:
+   # export GROQ_MODEL="llama-3.2-11b-text-preview" # Check Groq for latest models
+   # export GROQ_TEMPERATURE="0"
+   ```
+
+   **Mistral AI:**
+   ```bash
+   export CODEX_SERVICE_TYPE="mistral"
+   export MISTRAL_API_KEY="your_mistral_api_key"
+   # Optional:
+   # export MISTRAL_MODEL="codestral-latest" # Check Mistral for latest models
+   # export MISTRAL_TEMPERATURE="0"
+   ```
+
+   **Amazon Bedrock:**
+   ```bash
+   export CODEX_SERVICE_TYPE="bedrock"
+   # All Bedrock variables are optional if your AWS CLI/SDK environment is already configured
+   # (e.g., via ~/.aws/credentials, IAM roles, or other AWS environment variables).
+   # export BEDROCK_AWS_REGION="your_aws_region"
+   # export BEDROCK_AWS_ACCESS_KEY_ID="your_aws_access_key_id" # Only if not configured elsewhere
+   # export BEDROCK_AWS_SECRET_ACCESS_KEY="your_aws_secret_access_key" # Only if not configured elsewhere
+   # export BEDROCK_AWS_SESSION_TOKEN="your_aws_session_token" # If using temporary credentials
+   # export BEDROCK_MODEL="anthropic.claude-3-5-sonnet-20240620-v1:0" # Example, check Bedrock for available models
+   # export BEDROCK_TEMPERATURE="0"
+   ```
+   Add the chosen export lines to your `.zshrc` file and ensure you replace placeholder values like `<your_openai_api_key>` with your actual keys. The available models and other parameters for each `api_type` are detailed in `services/services.py`.
+
+5. Run `source ~/.zshrc` or open a new terminal session. Start typing a command or comment and complete it using `Ctrl+X` (`^X`)!
+
+6. If you use virtual environments you can set `ZSH_CODEX_PYTHON` in `zsh_codex.plugin.zsh` or `~/.zshrc` to python executable where `openai` or `google-generativeai` is installed.
 
 ```bash
-    plugins=(zsh_codex)
-    bindkey '^X' create_completion
+conda activate your_env
+which python3 # for windows -> where python3
+export ZSH_CODEX_PYTHON=$(which python3)
 ```
-
-Without oh-my-zsh:
-
-```bash
-    # in your/custom/path you need to have a "plugins" folder and in there you clone the repository as zsh_codex
-    export ZSH_CUSTOM="your/custom/path"
-    source "$ZSH_CUSTOM/plugins/zsh_codex/zsh_codex.plugin.zsh"
-    bindkey '^X' create_completion
-```
-
-4. Create a file called `zsh_codex.ini` in `~/.config`.
-   Example:
-
-```ini
-; Primary service configuration
-; Set 'service' to match one of the defined sections below.
-[service]
-service = groq_service
-
-; Example configuration for a self-hosted Ollama service.
-[my_ollama]
-api_type = openai
-api_key = dummy_key
-model = llama3.1
-base_url = http://localhost:11434/v1
-
-; OpenAI service configuration
-; Provide the 'api_key' and specify a 'model' if needed.
-[openai_service]
-api_type = openai
-api_key = <openai_apikey>
-
-; Groq service configuration
-; Provide the 'api_key'.
-[groq_service]
-api_type = groq
-api_key = <groq_apikey>
-model = gemma2-9b-it
-
-; Mistral service configuration
-; Provide the 'api_key'.
-[mistral_service]
-api_type = mistral
-api_key = <mistral_apikey>
-model = mistral-small-latest
-```
-
-In this configuration file, you can define multiple services with their own configurations. The required and optional parameters of the `api_type` are specified in `services/sevices.py`. Choose which service to use in the `[service]` section.
-
-6. Run `zsh`, start typing and complete it using `^X`!
-7. If you use virtual environments you can set `ZSH_CODEX_PYTHON` to python executable where `openai` or `google-generativeai` is installed.
-   e.g. for `miniconda` you can use:
-
-```bash
-export ZSH_CODEX_PYTHON="$HOME/miniconda3/bin/python"
-```
-
-### Fig Installation
-
-<a href="https://fig.io/plugins/other/zsh_codex_tom-doerr" target="_blank"><img src="https://fig.io/badges/install-with-fig.svg" /></a>
-
-## Troubleshooting
-
-### Unhandled ZLE widget 'create_completion'
-
-```
-zsh-syntax-highlighting: unhandled ZLE widget 'create_completion'
-zsh-syntax-highlighting: (This is sometimes caused by doing `bindkey <keys> create_completion` without creating the 'create_completion' widget with `zle -N` or `zle -C`.)
-```
-
-Add the line
-
-```
-zle -N create_completion
-```
-
-before you call `bindkey` but after loading the plugin (`plugins=(zsh_codex)`).
-
-### Already exists and is not an empty directory
-
-```
-fatal: destination path '~.oh-my-zsh/custom/plugins'
-```
-
-Try to download the ZSH plugin again.
-
-```
-git clone https://github.com/tom-doerr/zsh_codex.git ~/.oh-my-zsh/custom/plugins/zsh_codex
-```
-
----
-
-<p align="center">
-    <a href="https://www.buymeacoffee.com/TomDoerr" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
-</p>
 
 ## Passing in context
 
@@ -189,16 +120,6 @@ In order for option 2 to work you will need to first add `export ZSH_CODEX_PREEX
 Once you've done that and restarted your shell you can do things like this:
 
 `# git add all files. Also commit the current changeset with a descriptive message based on $(git diff). Then git push`
-
-## More usage examples
-
-<p align="center">
-    <img src='https://github.com/tom-doerr/bins/raw/main/zsh_codex/update_insert/all.gif'>
-    <p align="center">
-    </p>
-</p>
-
----
 
 [Fish Version](https://github.com/tom-doerr/codex.fish)
 
