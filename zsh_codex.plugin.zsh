@@ -5,6 +5,12 @@
 _ZSH_CODEX_REPO=$(dirname $0)
 
 export CODEX_SERVICE_TYPE="openai"
+export OPENAI_API_KEY="<your_openai_api_key>"
+export OPENAI_MODEL="gpt-4.1-mini"
+export OPENAI_API_BASE="<your_openai_api_base>" # Optional, only needed if you are using a custom OpenAI API base URL
+# Path of python interpreter
+# Get the path: linux/macOS -> which python3; windows -> where python3
+export ZSH_CODEX_PYTHON="<virtual env python>"
 
 create_completion() {
     # Get the text typed until now.
