@@ -35,7 +35,7 @@ git clone https://github.com/tom-doerr/zsh_codex.git
 3. Add the following to your `.zshrc` file.
 
 ```bash
-    source "~/.zsh/zsh_codex/zsh_codex.plugin.zsh"
+source "~/.zsh/zsh_codex/zsh_codex.plugin.zsh"
 ```
 
 4. Configure the plugin by setting environment variables in your `.zshrc` file or '~/.zsh/zsh_codex/zsh_codex.plugin.zsh'.
