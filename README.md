@@ -51,7 +51,7 @@ source "~/.zsh/zsh_codex/zsh_codex.plugin.zsh"
    export CODEX_SERVICE_TYPE="openai"
    export OPENAI_API_KEY="your_openai_api_key"
    # Optional:
-   # export OPENAI_MODEL="gpt-4o-mini"
+   # export OPENAI_MODEL="gpt-4.1-mini"
    # export OPENAI_BASE_URL="https://api.openai.com/v1" # For self-hosted or proxy
    # export OPENAI_TEMPERATURE="0"
    ```
