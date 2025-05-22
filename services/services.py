@@ -6,7 +6,7 @@ class BaseClient(ABC):
     """Base class for all clients"""
 
     api_type: str = None
-    system_prompt = "You are a zsh shell expert, please help me complete the following command, you should only output the completed command, no need to include any other explanation. Do not put completed command in a code block."
+    system_prompt = "You are a zsh shell expert, please help me complete the following command, you should only output the completed command, no need to include any other explanation or comment. Do not put completed command in a code block."
 
     @abstractmethod
     def get_completion(self, full_command: str) -> str:
@@ -18,7 +18,7 @@ class OpenAIClient(BaseClient):
     Reads configuration from environment variables:
         - OPENAI_API_KEY (required)
         - OPENAI_BASE_URL (optional): defaults to "https://api.openai.com/v1".
-        - OPENAI_MODEL (optional): defaults to "gpt-4o-mini"
+        - OPENAI_MODEL (optional): defaults to "gpt-4.1-mini"
         - OPENAI_TEMPERATURE (optional): defaults to 0.
     """
 
@@ -38,7 +38,7 @@ class OpenAIClient(BaseClient):
             print("OPENAI_API_KEY environment variable not set.")
             sys.exit(1)
 
-        self.model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+        self.model = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
         self.temperature = float(os.getenv("OPENAI_TEMPERATURE", "0"))
         
         self.client = OpenAI(
@@ -63,16 +63,18 @@ class GoogleGenAIClient(BaseClient):
     Reads configuration from environment variables:
         - GEMINI_API_KEY (required)
         - GEMINI_MODEL (optional): defaults to "gemma-3-27b-it"
+        - GEMINI_TEMPERATURE (optional): defaults to 0.
     """
 
     api_type = "gemini"
 
     def __init__(self):
         try:
-            import google.generativeai as genai
+            from google import genai
+            from google.genai import types
         except ImportError:
             print(
-                "Google Generative AI library is not installed. Please install it using 'pip install google-generativeai'"
+                "Google Generative AI library is not installed. Please install it using 'pip install -q -U google-genai'"
             )
             sys.exit(1)
 
@@ -81,14 +83,19 @@ class GoogleGenAIClient(BaseClient):
             print("GEMINI_API_KEY environment variable not set.")
             sys.exit(1)
             
-        genai.configure(api_key=api_key)
-        self.model_name = os.getenv("GEMINI_MODEL", "gemma-3-27b-it")
-        self.generative_model = genai.GenerativeModel(self.model_name)
+        self.client = genai.Client(api_key=api_key)
+        self.model = os.getenv("GEMINI_MODEL", "gemma-3-27b-it")
+        self.temperature = float(os.getenv("GEMINI_TEMPERATURE", "0"))
+        self._genai_types = types
 
     def get_completion(self, full_command: str) -> str:
-        chat = self.generative_model.start_chat(history=[])
-        prompt = f"{self.system_prompt}\\n\\n{full_command}" # Escaped newline for the diff
-        response = chat.send_message(prompt)
+        response = self.client.models.generate_content(
+            model=self.model,
+            contents=[f"{self.system_prompt}\n\n{full_command}"],
+            config=self._genai_types.GenerateContentConfig(
+                temperature=float(self.temperature)
+            )
+        )
         return response.text
 
 
