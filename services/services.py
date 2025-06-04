@@ -6,7 +6,7 @@ class BaseClient(ABC):
     """Base class for all clients"""
 
     api_type: str = None
-    system_prompt = "You are a zsh shell expert, please help me complete the following command, you should only output the completed command, no need to include any other explanation or comment. Do not put completed command in a code block."
+    system_prompt = "You are a zsh shell expert, please help me complete the following command with deepwiki mcp server, you should only output the completed command, no need to include any other explanation or comment. Do not put completed command in a code block."
 
     @abstractmethod
     def get_completion(self, full_command: str) -> str:
@@ -41,21 +41,32 @@ class OpenAIClient(BaseClient):
         self.model = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
         self.temperature = float(os.getenv("OPENAI_TEMPERATURE", "0"))
         
-        self.client = OpenAI(
-            api_key=api_key,
-            base_url=os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
-        )
+        self.client = OpenAI()
 
     def get_completion(self, full_command: str) -> str:
-        response = self.client.chat.completions.create(
+        response = self.client.responses.create(
             model=self.model,
-            messages=[
-                {"role": "system", "content": self.system_prompt},
-                {"role": "user", "content": full_command},
+            tools=[
+                {
+                    "type": "mcp",
+                    "server_label": "deepwiki",
+                    "server_url": "https://mcp.deepwiki.com/mcp",
+                    "require_approval": "never",
+                }
             ],
-            temperature=self.temperature,
+            messages=[
+                {
+                    "role": "system",
+                    "content": self.system_prompt
+                },
+                {
+                    "role": "user",
+                    "content": full_command
+                }
+            ],
+            temperature=self.temperature
         )
-        return response.choices[0].message.content
+        return response.output_text
 
 
 class GoogleGenAIClient(BaseClient):
