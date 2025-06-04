@@ -1,17 +1,15 @@
 #!/bin/zsh
-
 # This ZSH plugin reads the text from the current buffer
 # and uses a Python script to complete the text.
 _ZSH_CODEX_REPO=$(dirname $0)
 
-export CODEX_SERVICE_TYPE="openai"
-export OPENAI_API_KEY="<your_openai_api_key>"
-export OPENAI_MODEL="gpt-4.1-mini"
-export OPENAI_BASE_URL="<your_openai_api_base>" # Optional, only needed if you are using a custom OpenAI API base URL
+# Recommended: set the parameters below in your ~/.zshrc
+# export CODEX_SERVICE_TYPE="openai"
+# export OPENAI_MODEL="gpt-4.1-mini"
 
 # Path of python interpreter
 # Get the path: linux/macOS -> which python3; windows -> where python3
-export ZSH_CODEX_PYTHON="<virtual env python>"
+# export ZSH_CODEX_PYTHON="<your_python_path_here>"
 
 # Optional: choose whether to execute the $(command) in # ... # envelope context
 # export ZSH_CODEX_PREEXECUTE_COMMENT="true"
